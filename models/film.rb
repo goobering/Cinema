@@ -1,4 +1,4 @@
-require_relative '../db/sql_runner'
+require_relative '../sql/sql_runner'
 
 class Film
   attr_reader :id

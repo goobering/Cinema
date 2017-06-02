@@ -1,4 +1,6 @@
-class customer
+require_relative '../sql/sql_runner'
+
+class Customer
 
 attr_reader :id
 attr_accessor :name, :funds
@@ -10,7 +12,7 @@ attr_accessor :name, :funds
   end
 
   def save()
-    sql = "INSERT INTO customers (name, funds) VALUES ('#{@name}', '#{@funds}' RETURNING id;"
+    sql = "INSERT INTO customers (name, funds) VALUES ('#{@name}', '#{@funds}') RETURNING id;"
     customer = SqlRunner.run(sql).first()
     @id = customer['id'].to_i
   end
@@ -23,7 +25,7 @@ attr_accessor :name, :funds
   end
 
   def self.delete_all()
-    sql = "DELETE * FROM customers;"
+    sql = "DELETE FROM customers;"
     SqlRunner.run(sql)
   end
 
