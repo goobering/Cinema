@@ -23,6 +23,13 @@ attr_accessor :name, :funds
     return Customer.new(customer.first())
   end
 
+  def films()
+    sql = "SELECT films.* FROM films INNER JOIN tickets ON films.id = tickets.film_id WHERE tickets.customer_id = #{@id};"
+    result = SqlRunner.run(sql)
+    films = result.map { |film| Film.new(film) }
+    return films
+  end
+
   def self.all()
     sql = "SELECT * FROM customers;"
     customers = SqlRunner.run(sql)
