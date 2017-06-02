@@ -35,6 +35,12 @@ attr_accessor :name, :funds
     return films
   end
 
+  def num_tickets()
+    sql = "SELECT * FROM tickets WHERE tickets.customer_id = #{@id}"
+    result = SqlRunner.run(sql)
+    return result.count()
+  end
+
   def self.all()
     sql = "SELECT * FROM customers;"
     customers = SqlRunner.run(sql)
