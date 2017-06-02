@@ -17,6 +17,12 @@ attr_accessor :name, :funds
     @id = customer['id'].to_i
   end
 
+  def find()
+    sql = "SELECT * FROM customers WHERE customers.id = #{@id}"
+    customer = SqlRunner.run(sql)
+    return Customer.new(customer.first())
+  end
+
   def self.all()
     sql = "SELECT * FROM customers;"
     customers = SqlRunner.run(sql)

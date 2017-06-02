@@ -16,6 +16,12 @@ class Film
     @id = film['id'].to_i
   end
 
+  def find()
+    sql = "SELECT * FROM films WHERE films.id = #{@id}"
+    film = SqlRunner.run(sql)
+    return Film.new(film.first())
+  end
+
   def self.all()
     sql = "SELECT * FROM films;"
     result = SqlRunner.run(sql)

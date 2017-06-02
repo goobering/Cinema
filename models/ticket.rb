@@ -17,6 +17,12 @@ def save()
   @id = ticket['id'].to_i
 end
 
+def find()
+  sql = "SELECT * FROM tickets WHERE tickets.id = #{@id}"
+  ticket = SqlRunner.run(sql)
+  return Ticket.new(ticket.first())
+end
+
 def self.all()
   sql = "SELECT * FROM tickets;"
   result = SqlRunner.run(sql)
