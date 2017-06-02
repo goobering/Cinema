@@ -34,6 +34,12 @@ class Film
     return customers
   end
 
+  def num_customers()
+    sql = "SELECT * FROM tickets WHERE tickets.film_id = #{@id}"
+    result = SqlRunner.run(sql)
+    return result.count()
+  end
+
   def self.all()
     sql = "SELECT * FROM films;"
     result = SqlRunner.run(sql)
