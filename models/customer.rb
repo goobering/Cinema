@@ -17,6 +17,11 @@ attr_accessor :name, :funds
     @id = customer['id'].to_i
   end
 
+  def update()
+    sql = "UPDATE customers SET (name, funds) = ('#{@name}', '#{@funds}') WHERE id = #{@id}"
+    SqlRunner.run(sql)
+  end
+
   def find()
     sql = "SELECT * FROM customers WHERE customers.id = #{@id}"
     customer = SqlRunner.run(sql)

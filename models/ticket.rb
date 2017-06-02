@@ -6,7 +6,7 @@ attr_reader :id
 attr_accessor :customer_id, :film_id
 
 def initialize(options)
-  @id = options['id'].to_i
+  @id = options['id'].to_i 
   @customer_id = options['customer_id'].to_i
   @film_id = options['film_id'].to_i
 end
@@ -21,6 +21,24 @@ def find()
   sql = "SELECT * FROM tickets WHERE tickets.id = #{@id}"
   ticket = SqlRunner.run(sql)
   return Ticket.new(ticket.first())
+end
+
+def self.buy(customer, film)
+  # Quit early if customer doesn't have enough money
+  return nil if customer.funds < film.price
+
+  # Subtract film price from customer funds and update customer in DB
+  customer.funds -= film.price
+  customer.update()
+
+  # Create and save the new ticket
+  ticket = Ticket.new({
+    'customer_id' => customer.id, 
+    'film_id' => film.id})
+  ticket.save()
+
+  # Return new ticket
+  return ticket
 end
 
 def self.all()
