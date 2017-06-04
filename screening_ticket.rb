@@ -1,36 +1,35 @@
 require_relative '../sql/sql_runner'
 
-class Ticket
+class ScreeningTicket
 
 attr_reader :id
-attr_accessor :customer_id, :film_id
+attr_accessor :customer_id, :screening_id
 
 def initialize(options)
   @id = options['id'].to_i 
   @customer_id = options['customer_id'].to_i
-  @film_id = options['film_id'].to_i
-  @screening_id = options['screening_id'.to_i]
+  @screening_id = options['screening_id'].to_i
 end
 
 def save()
-  sql = "INSERT INTO tickets (customer_id, film_id) VALUES ('#{@customer_id}', '#{@film_id}') RETURNING id;"
+  sql = "INSERT INTO screening_tickets (customer_id, screening_id) VALUES ('#{@customer_id}', '#{@screening_id}') RETURNING id;"
   ticket = SqlRunner.run(sql).first()
   @id = ticket['id'].to_i
 end
 
 def find()
-  sql = "SELECT * FROM tickets WHERE tickets.id = #{@id}"
-  ticket = SqlRunner.run(sql)
-  return Ticket.new(ticket.first())
+  sql = "SELECT * FROM screening_tickets WHERE screening_tickets.id = #{@id}"
+  screening_tickets = SqlRunner.run(sql)
+  return ScreeningTicket.new(screening_tickets.first())
 end
 
 def update()
-  sql = "UPDATE tickets SET (customer_id, film_id) = ('#{@customer_id}', '#{film_id}') WHERE id = #{@id}"
+  sql = "UPDATE screening_tickets SET (customer_id, screening_id) = ('#{@customer_id}', '#{screening_id}') WHERE id = #{@id}"
   SqlRunner.run(sql)
 end
 
 def delete()
-  sql = "DELETE FROM tickets WHERE tickets.id = #{@id}"
+  sql = "DELETE FROM screening_tickets WHERE screening_tickets.id = #{@id}"
   SqlRunner.run(sql)
 end
 
@@ -53,13 +52,13 @@ def refund()
   delete()
 end
 
-def self.refund(customer, film)
-  # Get a single ticket matching the film id
-  customer_tickets = customer.tickets()
-  ticket_to_refund = customer_tickets.select { |ticket| ticket.film_id == film.id }.first()
+def self.refund(customer, screening)
+  # Get a single screening_ticket matching the screening id
+  customer_screening_tickets = customer.screening_tickets()
+  screening_ticket_to_refund = customer_screening_tickets.select { |screening_ticket| screening_ticket.film_id == screening.id }.first()
 
   # Return nil if no ticket found
-  if ticket_to_refund == nil
+  if screening_ticket_to_refund == nil
     return nil
   end
 
