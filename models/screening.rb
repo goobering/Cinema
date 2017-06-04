@@ -9,7 +9,7 @@ attr_accessor :film_id, :start_time, :capacity
 def initialize(options)
   @id = options['id'].to_i
   @film_id = options['film_id'].to_i
-  @start_time = options['start_time'].to_datetime
+  @start_time = DateTime.parse(options['start_time'])# .to_datetime
   @capacity = options['capacity'].to_i
 end
 
@@ -44,13 +44,22 @@ def customers()
 end
 
 def num_customers()
-  sql = "SELECT * FROM tickets WHERE tickets.film_id = #{@id}"
-  result = SqlRunner.run(sql)
-  return result.count()
+  return customers().count()
 end
 
-def most_popular_screening_time(film)
+def self.most_popular_screening_time(film)
+  return nil if film.screenings() == nil
 
+  highest_customer_num = 0
+  best_screening = nil
+  for screening in film.screenings
+    if screening.num_customers > highest_customer_num
+      best_screening = screening
+      highest_customer_num = screening.num_customers()
+    end
+  end
+
+  return best_screening
 end
 
 def self.all()

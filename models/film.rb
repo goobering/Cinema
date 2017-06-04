@@ -28,8 +28,9 @@ class Film
   end
 
   def screenings()
-    sql = "SELECT * FROM screenings WHERE screenings.film_id = #{@film_id}"
+    sql = "SELECT * FROM screenings WHERE screenings.film_id = #{@id}"
     result = SqlRunner.run(sql)
+
     return result.map { |screening| Screening.new(screening) }
   end
 

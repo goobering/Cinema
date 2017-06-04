@@ -47,9 +47,8 @@ attr_accessor :name, :funds
 
     return result.map { |screening| Screening.new( {
       'id' => screening['screening_id'], 
-      'film_id' => screening['film_id'], 
-      # Holy wow this took some figuring out:
-      'start_time' => DateTime.parse(screening['start_time']), 
+      'film_id' => screening['film_id'],
+      'start_time' => screening['start_time'],
       'capacity' => screening['capacity'] } ) }
   end
 

@@ -22,42 +22,42 @@ film2.save()
 
 screening1 = Screening.new({
   'film_id' => film1.id,
-  'start_time' => DateTime.now(),
+  'start_time' => DateTime.now().to_s,
   'capacity' => 3
   })
 screening1.save()
 
 screening2 = Screening.new({
   'film_id' => film1.id,
-  'start_time' => DateTime.now() + 1,
+  'start_time' => (DateTime.now() + 1).to_s,
   'capacity' => 4
   })
 screening2.save()
 
 screening3 = Screening.new({
   'film_id' => film1.id,
-  'start_time' => DateTime.now() + 2,
+  'start_time' => (DateTime.now() + 2).to_s,
   'capacity' => 5
   })
 screening3.save()
 
 screening4 = Screening.new({
   'film_id' => film2.id,
-  'start_time' => DateTime.now(),
+  'start_time' => (DateTime.now()).to_s,
   'capacity' => 6
   })
 screening4.save()
 
 screening5 = Screening.new({
   'film_id' => film2.id,
-  'start_time' => DateTime.now() + 1,
+  'start_time' => (DateTime.now() + 1).to_s,
   'capacity' => 7
   })
 screening5.save()
 
 screening6 = Screening.new({
   'film_id' => film2.id,
-  'start_time' => DateTime.now() + 2,
+  'start_time' => (DateTime.now() + 2).to_s,
   'capacity' => 8
   })
 screening6.save()
