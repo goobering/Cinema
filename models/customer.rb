@@ -35,10 +35,25 @@ attr_accessor :name, :funds
     return films
   end
 
-  def num_tickets()
+  def tickets()
     sql = "SELECT * FROM tickets WHERE tickets.customer_id = #{@id}"
     result = SqlRunner.run(sql)
-    return result.count()
+    tickets = result.map { |ticket| Ticket.new(ticket) }
+    return tickets
+  end
+
+  def num_tickets()
+    return tickets().count()
+  end
+
+  def add_funds(amount)
+    @funds += amount
+    update()
+  end
+
+  def subtract_funds(amount)
+    @funds -= amount
+    update()
   end
 
   def self.all()
