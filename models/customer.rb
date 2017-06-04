@@ -28,13 +28,6 @@ attr_accessor :name, :funds
     return Customer.new(customer.first())
   end
 
-  def films()
-    sql = "SELECT films.* FROM films INNER JOIN tickets ON films.id = tickets.film_id WHERE tickets.customer_id = #{@id};"
-    result = SqlRunner.run(sql)
-    films = result.map { |film| Film.new(film) }
-    return films
-  end
-
   def tickets()
     sql = "SELECT * FROM tickets WHERE tickets.customer_id = #{@id}"
     result = SqlRunner.run(sql)
@@ -46,10 +39,22 @@ attr_accessor :name, :funds
     return tickets().count()
   end
 
-  def screening_tickets()
+  def screenings()
+    sql = "SELECT * FROM tickets INNER JOIN screenings ON screenings.id = tickets.screening_id WHERE tickets.customer_id = #{@id};"
+    result = SqlRunner.run(sql)
+
+    if result == nil then return nil end
+
+    return result.map { |screening| Screening.new( {
+      'id' => screening['screening_id'], 
+      'film_id' => screening['film_id'], 
+      # Holy wow this took some figuring out:
+      'start_time' => DateTime.parse(screening['start_time']), 
+      'capacity' => screening['capacity'] } ) }
   end
 
-  def num_screening_tickets()
+  def num_screenings()
+    return screenings().count()
   end
 
   def add_funds(amount)
