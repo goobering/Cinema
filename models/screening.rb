@@ -60,7 +60,7 @@ def self.all()
   return screenings
 end
 
-def delete_all()
+def self.delete_all()
   sql = "DELETE FROM screenings"
   SqlRunner.run(sql)
 end

@@ -39,11 +39,11 @@ def refund()
   result = SqlRunner.run(customer_sql)
   customer = Customer.new(result.first())
 
-  # Get the relevant film price
-  film_price_sql = "SELECT films.price FROM films INNER JOIN films ON films.screening_id = screenings.id WHERE films.screening_id = '#{@screening_id}"
-  # film_sql = "SELECT * FROM films where films.id = #{@film_id}"
+  # Get the relevant film price via the ticket screening_id
+  film_price_sql = "SELECT films.price FROM films INNER JOIN screenings ON films.id = screenings.film_id WHERE screenings.id = #{@screening_id};"
   result = SqlRunner.run(film_price_sql)
-  film_price = result.first()
+
+  film_price = result.first()['price'].to_i
 
   # Refund customer money
   customer.add_funds(film_price)
@@ -62,17 +62,7 @@ def self.refund(customer, screening)
     return nil
   end
 
-  # Get the film price from the screening_id
-  film_price_sql = "SELECT films.price FROM films WHERE films.id = #{ticket_to_refund.film_id}"
-  film_price = SqlRunner.run(film_price_sql).first()
-
-  # Refund customer money
-  customer.add_funds(film_price)
-  customer.update()
-  
-  # Delete the ticket
-  sql = "DELETE FROM tickets WHERE tickets.id = #{ticket_to_refund.id}"
-  SqlRunner.run(sql)
+  ticket_to_refund.refund()
 end
 
 def self.buy(customer, film)

@@ -6,6 +6,7 @@ require_relative '../models/screening.rb'
 require 'pry-byebug'
 
 Customer.delete_all()
+Screening.delete_all()
 Film.delete_all()
 Ticket.delete_all()
 
