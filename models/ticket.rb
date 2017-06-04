@@ -65,17 +65,22 @@ def self.refund(customer, screening)
   ticket_to_refund.refund()
 end
 
-def self.buy(customer, film)
+def self.buy(customer, screening)
+  # Get the relevant film price via the ticket screening_id
+  film_price_sql = "SELECT films.price FROM films INNER JOIN screenings ON films.id = screenings.film_id WHERE screenings.id = #{screening.id};"
+  result = SqlRunner.run(film_price_sql)
+  film_price = result.first()['price'].to_i
+
   # Quit early if customer doesn't have enough money
-  return nil if customer.funds < film.price
+  return nil if customer.funds < film_price
 
   # Subtract film price from customer funds and update customer in DB
-  customer.subtract_funds(film.price)
+  customer.subtract_funds(film_price)
 
   # Create and save the new ticket
   ticket = Ticket.new({
     'customer_id' => customer.id, 
-    'film_id' => film.id})
+    'screening_id' => screening.id})
   ticket.save()
 
   # Return new ticket
