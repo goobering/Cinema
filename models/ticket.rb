@@ -74,6 +74,9 @@ def self.buy(customer, screening)
   # Quit early if customer doesn't have enough money
   return nil if customer.funds < film_price
 
+  # Quit early if the screening doesn't have enough capacity
+  return nil if screening.num_customers() >= screening.capacity()
+
   # Subtract film price from customer funds and update customer in DB
   customer.subtract_funds(film_price)
 
