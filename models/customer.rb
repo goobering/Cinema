@@ -46,6 +46,12 @@ attr_accessor :name, :funds
     return tickets().count()
   end
 
+  def screening_tickets()
+  end
+
+  def num_screening_tickets()
+  end
+
   def add_funds(amount)
     @funds += amount
     update()

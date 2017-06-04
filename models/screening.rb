@@ -3,6 +3,9 @@ require_relative '../sql/sql_runner.rb'
 
 class Screening
 
+attr_reader :id
+attr_accessor :film_id, :start_time, :capacity
+
 def initialize(options)
   @id = options['id'].to_i
   @film_id = options['film_id'].to_i
@@ -33,8 +36,17 @@ def find()
   return Screening.new(screenings.first())
 end
 
-def num_customers()
+def customers()
+    sql = "SELECT customers.* FROM customers INNER JOIN tickets ON customers.id = tickets.customer_id WHERE tickets.screening_id = #{@id};"
+    result = SqlRunner.run(sql)
+    customers = result.map { |customer| Customer.new(customer) }
+    return customers
+end
 
+def num_customers()
+  sql = "SELECT * FROM tickets WHERE tickets.film_id = #{@id}"
+  result = SqlRunner.run(sql)
+  return result.count()
 end
 
 def most_popular_screening_time(film)

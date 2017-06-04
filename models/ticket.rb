@@ -3,17 +3,16 @@ require_relative '../sql/sql_runner'
 class Ticket
 
 attr_reader :id
-attr_accessor :customer_id, :film_id
+attr_accessor :customer_id, :screening_id
 
 def initialize(options)
   @id = options['id'].to_i 
   @customer_id = options['customer_id'].to_i
-  @film_id = options['film_id'].to_i
-  @screening_id = options['screening_id'.to_i]
+  @screening_id = options['screening_id'].to_i
 end
 
 def save()
-  sql = "INSERT INTO tickets (customer_id, film_id) VALUES ('#{@customer_id}', '#{@film_id}') RETURNING id;"
+  sql = "INSERT INTO tickets (customer_id, screening_id) VALUES ('#{@customer_id}', '#{@screening_id}') RETURNING id;"
   ticket = SqlRunner.run(sql).first()
   @id = ticket['id'].to_i
 end
@@ -25,7 +24,7 @@ def find()
 end
 
 def update()
-  sql = "UPDATE tickets SET (customer_id, film_id) = ('#{@customer_id}', '#{film_id}') WHERE id = #{@id}"
+  sql = "UPDATE tickets SET (customer_id, screening_id) = ('#{@customer_id}', '#{screening_id}') WHERE id = #{@id}"
   SqlRunner.run(sql)
 end
 
@@ -40,31 +39,35 @@ def refund()
   result = SqlRunner.run(customer_sql)
   customer = Customer.new(result.first())
 
-  # Get the relevant film
-  film_sql = "SELECT * FROM films where films.id = #{@film_id}"
-  result = SqlRunner.run(film_sql)
-  film = Film.new(result.first())
+  # Get the relevant film price
+  film_price_sql = "SELECT films.price FROM films INNER JOIN films ON films.screening_id = screenings.id WHERE films.screening_id = '#{@screening_id}"
+  # film_sql = "SELECT * FROM films where films.id = #{@film_id}"
+  result = SqlRunner.run(film_price_sql)
+  film_price = result.first()
 
   # Refund customer money
-  customer.add_funds(film.price)
+  customer.add_funds(film_price)
   customer.update()
 
   # Delete the ticket
   delete()
 end
 
-def self.refund(customer, film)
-  # Get a single ticket matching the film id
-  customer_tickets = customer.tickets()
-  ticket_to_refund = customer_tickets.select { |ticket| ticket.film_id == film.id }.first()
+def self.refund(customer, screening)
+  # Get a single ticket matching the screening id
+  ticket_to_refund = customer.tickets().select { |ticket| ticket.screening_id == screening.id }.first()
 
   # Return nil if no ticket found
   if ticket_to_refund == nil
     return nil
   end
 
+  # Get the film price from the screening_id
+  film_price_sql = "SELECT films.price FROM films WHERE films.id = #{ticket_to_refund.film_id}"
+  film_price = SqlRunner.run(film_price_sql).first()
+
   # Refund customer money
-  customer.add_funds(film.price)
+  customer.add_funds(film_price)
   customer.update()
   
   # Delete the ticket

@@ -19,18 +19,6 @@ film1.save()
 film2 = Film.new({'title' => 'Hot Fuzz', 'price' => 8})
 film2.save()
 
-ticket1 = Ticket.new({
-  'customer_id' => customer1.id,
-  'film_id' => film1.id
-  })
-ticket1.save()
-
-ticket2 = Ticket.new({
-  'customer_id' => customer2.id,
-  'film_id' => film2.id
-  })
-ticket2.save()
-
 screening1 = Screening.new({
   'film_id' => film1.id,
   'start_time' => DateTime.now(),
@@ -72,6 +60,18 @@ screening6 = Screening.new({
   'capacity' => 8
   })
 screening6.save()
+
+ticket1 = Ticket.new({
+  'customer_id' => customer1.id,
+  'screening_id' => screening1.id
+  })
+ticket1.save()
+
+ticket2 = Ticket.new({
+  'customer_id' => customer2.id,
+  'screening_id' => screening4.id
+  })
+ticket2.save()
 
 binding.pry()
 nil

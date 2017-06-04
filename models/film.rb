@@ -27,17 +27,14 @@ class Film
     return Film.new(film.first())
   end
 
-  def customers()
-    sql = "SELECT customers.* FROM customers INNER JOIN tickets ON customers.id = tickets.customer_id WHERE tickets.film_id = #{@id};"
+  def screenings()
+    sql = "SELECT * FROM screenings WHERE screenings.film_id = #{@film_id}"
     result = SqlRunner.run(sql)
-    customers = result.map { |customer| Customer.new(customer) }
-    return customers
+    return result.map { |screening| Screening.new(screening) }
   end
 
-  def num_customers()
-    sql = "SELECT * FROM tickets WHERE tickets.film_id = #{@id}"
-    result = SqlRunner.run(sql)
-    return result.count()
+  def num_screenings()
+    return screenings().count()
   end
 
   def self.all()
